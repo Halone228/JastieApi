@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "jastieapi"
+version = "0.1.0"
+description = ""
+authors = ["halone <haloneprog@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.109.0"
+aiogram = {extras = ["types"], version = "^3.3.0"}
+jastie-database = {path = "JastieDatabase", develop = true}
+pyrogram = "^2.0.106"
+tgcrypto = "^1.2.5"
+pydantic-settings = "^2.1.0"
+uvicorn = "^0.27.0.post1"
+aiocache = "^0.12.2"
+
+[tool.poetry.scripts]
+dev = "main:start_dev"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
