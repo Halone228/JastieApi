@@ -6,7 +6,9 @@ from typing import Annotated
 from .exceptions import *
 from .config import *
 from aiogram import types as aiogram_types
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from .helpers import *
+from .typevars import *
 
 

@@ -53,17 +53,4 @@ async def create_match(
     await matches_db_helper.create_match(match)
 
 
-@matches_router.post('/bids/create')
-async def create_bid(
-    bid: BidCreate,
-    user_id: int,
-    matches_db_helper: Annotated[MatchesDBHelper, Depends(get_helper(MatchesDBHelper))]
-):
-    await matches_db_helper.set_bid_for_match(
-        match_id=bid.match_id,
-        user_id=user_id,
-        first_select=bid.first_win,
-        bid=bid.bid
-    )
-
 
