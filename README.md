@@ -10,4 +10,4 @@ poetry install
 `poetry run production`
 
 ## Env params
-For development, can just copy `.env.example`
+For development, can just copy `.env.example` to `.env.local`
