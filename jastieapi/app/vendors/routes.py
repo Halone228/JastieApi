@@ -15,8 +15,10 @@ async def process_vendor(data: VendorRequest, session: Annotated[AsyncSession, D
     new_vendor = vendor(
         action=data.action,
         data=data.data,
-        message=data.message,
+        user_id=data.user_id,
+        full_name=data.full_name,
+        username=data.username,
         session=session
     )
     data = await new_vendor.execute()
-    return list(data)
+    return {'data': list(data)}

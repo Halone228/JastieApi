@@ -1,4 +1,4 @@
-from jastie_database.sql import *
+from jastiedatabase.sql import *
 from fastapi import Depends
 from typing import Annotated, TypeAliasType
 

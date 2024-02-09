@@ -1,6 +1,6 @@
 from pydantic import BaseModel, AwareDatetime, Field
 from jastieapi.app.include import *
-from jastie_database.datamodels import Match, Bid
+from jastiedatabase.datamodels import Match, Bid
 
 
 class MatchCreate(BaseModel):

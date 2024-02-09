@@ -1,5 +1,5 @@
-from jastie_database.sql.methods import *
-from jastie_database.redis.methods import *
+from jastiedatabase.sql.methods import *
+from jastiedatabase.redis.methods import *
 from .bot_methods import *
 from fastapi import APIRouter
 from typing import Annotated
