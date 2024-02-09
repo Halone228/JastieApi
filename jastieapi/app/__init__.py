@@ -1,3 +1,7 @@
+import asyncio
+
+import loguru
+
 from .vendors import *
 from .skins import *
 from .users import *
@@ -8,6 +12,7 @@ from fastapi.responses import RedirectResponse
 from contextlib import asynccontextmanager
 from jastiedatabase.sql import init_db
 from jastiedatabase.sql.methods.users import increment_count
+from jastiedatabase.sql.methods import context_session
 from jastiedatabase.redis import get_discounts, get_discount
 from jastiedatabase.redis.methods import Discount
 from pydantic import BaseModel
@@ -19,8 +24,16 @@ class DiscountsAnswer(BaseModel):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    async def increment_loop():
+        loguru.logger.debug('Start increment loop')
+        async with context_session() as session:
+            while True:
+                await asyncio.sleep(20)
+                await increment_count(session)
     await init_db()
+    task = asyncio.create_task(increment_loop())
     yield
+    del task
 
 
 app = FastAPI(
