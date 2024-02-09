@@ -48,11 +48,12 @@ async def get_user_points(
 
 @users_router.post('/new_message')
 async def new_message(
-    message: aiogram_types.Message,
+    message: MessageValue,
     db_helper_users: users_db_typevar
 ):
-    if message.chat.id not in config.ALLOWED_CHATS:
+    logger.debug(message)
+    if message.chat_id not in config.ALLOWED_CHATS:
         raise CHAT_DISALLOWED
 
-    await db_helper_users.new_message(message)
+    await db_helper_users.new_message(message.text, message.user_id)
 
