@@ -6,7 +6,14 @@ from .matches import *
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from contextlib import asynccontextmanager
-from jastie_database.sql import init_db
+from jastiedatabase.sql import init_db
+from jastiedatabase.redis import get_discounts, get_discount
+from jastiedatabase.redis.methods import Discount
+from pydantic import BaseModel
+
+
+class DiscountsAnswer(BaseModel):
+    data: list[Discount]
 
 
 @asynccontextmanager
@@ -28,6 +35,18 @@ async def index() -> RedirectResponse:
     return RedirectResponse(
         url='/docs'
     )
+
+
+@app.get('/discounts/all')
+async def get_discounts_() -> DiscountsAnswer:
+    return DiscountsAnswer(
+        data=await get_discounts()
+    )
+
+
+@app.get('/discounts/{discount_uid:str}')
+async def get_discount(discount_uid: str) -> Discount:
+    return await get_discount(discount_uid)
 
 
 __all__ = [

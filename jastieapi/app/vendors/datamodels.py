@@ -6,4 +6,6 @@ class VendorRequest(BaseModel):
     vendor: str
     action: str
     data: str
-    message: aiogram.types.Message
+    user_id: int
+    username: str
+    full_name: str

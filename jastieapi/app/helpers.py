@@ -1,4 +1,4 @@
-from jastie_database.sql import UserDBHelper
+from jastiedatabase.sql import UserDBHelper
 from typing import NoReturn
 from fastapi import HTTPException
 
