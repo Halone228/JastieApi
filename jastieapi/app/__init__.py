@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from contextlib import asynccontextmanager
 from jastiedatabase.sql import init_db
+from jastiedatabase.sql.methods.users import increment_count
 from jastiedatabase.redis import get_discounts, get_discount
 from jastiedatabase.redis.methods import Discount
 from pydantic import BaseModel
