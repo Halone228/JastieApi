@@ -30,10 +30,19 @@ matches_router = APIRouter(
 
 @matches_router.get('/active_matches')
 async def get_active_matches(
-    matches_db_helper: Annotated[MatchesDBHelper, Depends(get_helper(MatchesDBHelper))]
+    matches_db_helper: matches_db_typevar
 ) -> list[Match]:
     data = await matches_db_helper.get_active_matches()
     return [Match.model_validate(i, from_attributes=True) for i in data]
+
+
+@matches_router.get('/match_id')
+async def get_match(
+    match_id: int,
+    matches_db_helper: matches_db_typevar
+) -> Match:
+    data = await matches_db_helper.get_match(match_id)
+    return data
 
 
 @matches_router.get('/bids/{user_id}')
