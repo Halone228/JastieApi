@@ -15,3 +15,14 @@ class MessageValue(BaseModel):
 
 class ReferrerAnswer(BaseModel):
     code: UsersResultCodes
+
+
+class User(BaseModel):
+    id: int
+    username: str | None
+    first_name: str | None
+    last_name: str | None
+
+
+class UsersList(BaseModel):
+    result: list[User]

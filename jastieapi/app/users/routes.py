@@ -1,5 +1,9 @@
+import os
+
 from jastieapi.app.include import *
 from .datamodels import *
+from jastieapi.app.bot_methods import *
+from jastieapi.app.bot_methods.methods import BotMethods
 
 users_router = APIRouter(
     prefix='/users',
@@ -86,3 +90,14 @@ async def get_referrers_count(
     return {
         'data': await users_db_helper.get_referrals_count(user_id)
     }
+
+
+@users_router.get('/find')
+async def find_users(
+    query: str
+) -> UsersList:
+    return UsersList.model_validate(
+        {'result': await BotMethods.get_users(chat_id=int(os.getenv('CHAT_ID')), query=query)},
+        from_attributes=True,
+        strict=False
+    )

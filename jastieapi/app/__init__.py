@@ -15,6 +15,7 @@ from jastiedatabase.sql.methods.users import increment_count
 from jastiedatabase.sql.methods import context_session
 from jastiedatabase.redis import get_discounts, get_discount
 from jastiedatabase.redis.methods import Discount
+from jastieapi.app.bot_methods.methods import BotMethods
 from pydantic import BaseModel
 
 
@@ -24,6 +25,8 @@ class DiscountsAnswer(BaseModel):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    await BotMethods.init()
+
     async def increment_loop():
         loguru.logger.debug('Start increment loop')
         async with context_session() as session:
