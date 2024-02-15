@@ -36,11 +36,11 @@ async def get_active_matches(
     return [Match.model_validate(i, from_attributes=True) for i in data]
 
 
-@matches_router.get('/match_id')
+@matches_router.get('/{match_id}')
 async def get_match(
     match_id: int,
     matches_db_helper: matches_db_typevar
-) -> Match:
+) -> Match | None:
     data = await matches_db_helper.get_match(match_id)
     return data
 
