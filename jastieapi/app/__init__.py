@@ -29,9 +29,9 @@ async def lifespan(app: FastAPI):
 
     async def increment_loop():
         loguru.logger.debug('Start increment loop')
-        async with context_session() as session:
-            while True:
-                await asyncio.sleep(20)
+        while True:
+            await asyncio.sleep(20)
+            async with context_session() as session:
                 await increment_count(session)
     await init_db()
     task = asyncio.create_task(increment_loop())
@@ -42,7 +42,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     host='0.0.0.0',
     port=5000,
-    lifespan=lifespan
+    lifespan=lifespan,
+    debug=True
 )
 app.include_router(main_router)
 

@@ -1,4 +1,7 @@
+from asyncio import gather
+
 import os
+from fastapi import Query
 
 from jastieapi.app.include import *
 from .datamodels import *
@@ -9,6 +12,10 @@ users_router = APIRouter(
     prefix='/users',
     tags=['User']
 )
+
+
+class PointsAdd(BaseModel):
+    points: float
 
 
 @users_router.get('/add/{chat_id}/{user_id}')
@@ -48,6 +55,17 @@ async def get_user_points(
         points=await db_helper_users.get_points(user_id),
         user_id=user_id
     )
+
+
+@users_router.post('/points/users')
+async def get_users_points_bulk(
+    db_helper_users: users_db_typevar,
+    user_ids: Annotated[list[int], Body()]
+):
+    data = await db_helper_users.get_users_points(user_ids)
+    return {
+        i.user_id: i.points for i in data
+    }
 
 
 @users_router.post('/new_message')
@@ -101,3 +119,12 @@ async def find_users(
         from_attributes=True,
         strict=False
     )
+
+
+@users_router.post('/add/{user_id}')
+async def add_user_points(
+    user_id: int,
+    data: PointsAdd,
+    users_db_helper: users_db_typevar
+):
+    await users_db_helper.add_points(user_id, data.points)

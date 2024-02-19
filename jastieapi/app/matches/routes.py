@@ -36,6 +36,14 @@ async def get_active_matches(
     return [Match.model_validate(i, from_attributes=True) for i in data]
 
 
+@matches_router.get('/all')
+async def get_all_matches(
+    matches_db_helper: matches_db_typevar
+) -> list[Match]:
+    data = await matches_db_helper.get_all_matches()
+    return [Match.model_validate(i, from_attributes=True) for i in data]
+
+
 @matches_router.get('/{match_id}')
 async def get_match(
     match_id: int,
@@ -60,6 +68,16 @@ async def create_match(
     matches_db_helper: Annotated[MatchesDBHelper, Depends(get_helper(MatchesDBHelper))]
 ):
     await matches_db_helper.create_match(match)
+
+
+@matches_router.get('/match/{match_id}/win/{first_team}')
+async def set_win(
+    match_id: int,
+    first_team: bool,
+    matches_db_helper: matches_db_typevar,
+    user_db_helper: users_db_typevar
+):
+    pass
 
 
 

@@ -1,7 +1,7 @@
 from jastiedatabase.sql.methods import *
 from jastiedatabase.redis.methods import *
 from .bot_methods import *
-from fastapi import APIRouter
+from fastapi import APIRouter, Body
 from typing import Annotated
 from .exceptions import *
 from .config import *
