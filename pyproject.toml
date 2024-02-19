@@ -6,7 +6,7 @@ authors = ["halone <haloneprog@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 fastapi = "^0.109.0"
 aiogram = {extras = ["types"], version = "^3.3.0"}
 jastiedatabase = {path = "JastieDatabase", develop = true}
