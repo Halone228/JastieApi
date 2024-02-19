@@ -14,6 +14,7 @@ class MatchCreate(BaseModel):
         gt=1
     )
     end_time: AwareDatetime
+    url: str
 
 
 class BidCreate(BaseModel):
