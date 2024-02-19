@@ -28,7 +28,6 @@ class BotMethods:
             api_id=7816785,
             api_hash='a31486c26edf6c02ed37333696a2a49e',
             bot_token='6619062467:AAFmkEnzZH5uwYv4D4ZBrqfNRzMzgevgqoA',
-            password='herachbhead'
         )
         await cls.bot_client.start()
 
