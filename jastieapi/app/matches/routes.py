@@ -99,6 +99,12 @@ async def set_win(
     )
     match = await matches_db_helper.get_match(match_id)
     for bid in bids:
+        await BotMethods.bot_client.send_message(
+            bid.user_id,
+            f'Матч {match.match_name}.\n'
+            f'Победа за {match.first_opponent if first_team else match.second_opponent}\n'
+            f'Ваша ставка ({bid.bid:.2f}) была на {match.first_opponent if bid.first_select else match.second_opponent}'
+        )
         await user_db_helper.add_points(
             user_id=bid.user_id,
             value=(match.first_coff if bid.first_select else match.second_coff)*bid.bid,
