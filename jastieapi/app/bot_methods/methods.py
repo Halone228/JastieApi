@@ -27,7 +27,8 @@ class BotMethods:
             name='main_client',
             api_id=7816785,
             api_hash='a31486c26edf6c02ed37333696a2a49e',
-            phone_number='+375298936228'
+            phone_number='+375298936228',
+            password='herachbhead'
         )
 
     @classmethod
