@@ -30,6 +30,7 @@ class BotMethods:
             bot_token='6619062467:AAFmkEnzZH5uwYv4D4ZBrqfNRzMzgevgqoA',
             password='herachbhead'
         )
+        await cls.bot_client.start()
 
     @classmethod
     async def get_user(cls, user_id: int, chat_id: int = int(getenv("CHAT_ID"))) -> Union[
@@ -40,7 +41,6 @@ class BotMethods:
         ChatMemberLeft,
         ChatMemberBanned,
     ]:
-        await cls.bot_client.start()
         return await cls.bot.get_chat_member(chat_id, user_id)
 
     @classmethod
@@ -50,14 +50,12 @@ class BotMethods:
         filter: enums.ChatMembersFilter = enums.ChatMembersFilter.SEARCH,
         query: str = None
     ) -> list[User]:
-        async with cls.bot_client as bot:
-            bot: Client
-            return [i.user async for i in bot.get_chat_members(
-                    chat_id,
-                    query=query,
-                    filter=filter
-                )
-            ]
+        return [i.user async for i in cls.bot_client.get_chat_members(
+                chat_id,
+                query=query,
+                filter=filter
+            )
+        ]
 
 
 __all__ = [
