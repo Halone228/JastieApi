@@ -92,7 +92,19 @@ async def set_win(
     matches_db_helper: matches_db_typevar,
     user_db_helper: users_db_typevar
 ):
-    pass
+    bids = await matches_db_helper.get_match_bids(match_id)
+    await matches_db_helper.set_match_win(
+        match_id=match_id,
+        first_win=first_team
+    )
+    match = await matches_db_helper.get_match(match_id)
+    for bid in bids:
+        await user_db_helper.add_points(
+            user_id=bid.user_id,
+            value=(match.first_coff if bid.first_select else match.second_coff)*bid.bid,
+            by='bid'
+        )
+
 
 
 
