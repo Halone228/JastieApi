@@ -19,7 +19,7 @@ class MatchCreate(BaseModel):
 class BidCreate(BaseModel):
     match_id: int
     bid: float
-    first_win: bool
+    first_select: bool
 
 
 matches_router = APIRouter(
@@ -60,6 +60,20 @@ async def get_user_bids(
 ) -> list[Bid]:
     data = await matches_db_helper.get_user_bids(user_id)
     return [Bid.model_validate(i, from_attributes=True) for i in data]
+
+
+@matches_router.post('/bid/create/{user_id}')
+async def create_bid(
+    bid: BidCreate,
+    user_id: int,
+    matches_db_helper: matches_db_typevar
+):
+    await matches_db_helper.set_bid_for_match(
+        match_id=bid.match_id,
+        user_id=user_id,
+        first_select=bid.first_select,
+        bid=bid.bid
+    )
 
 
 @matches_router.post('/match/create')
