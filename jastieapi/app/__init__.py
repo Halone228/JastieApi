@@ -25,7 +25,8 @@ class DiscountsAnswer(BaseModel):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await BotMethods.init()
+    _ = asyncio.create_task(BotMethods.init())
+    __ = asyncio.create_task(init_db())
 
     async def increment_loop():
         loguru.logger.debug('Start increment loop')
@@ -33,8 +34,8 @@ async def lifespan(app: FastAPI):
             await asyncio.sleep(20)
             async with context_session() as session:
                 await increment_count(session)
-    await init_db()
     task = asyncio.create_task(increment_loop())
+    await __
     yield
     del task
 
