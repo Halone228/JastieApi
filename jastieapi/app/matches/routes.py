@@ -105,6 +105,8 @@ async def set_win(
             f'Победа за {match.first_opponent if first_team else match.second_opponent}\n'
             f'Ваша ставка ({bid.bid:.2f}) была на {match.first_opponent if bid.first_select else match.second_opponent}'
         )
+        if first_team != bid.first_select:
+            continue
         await user_db_helper.add_points(
             user_id=bid.user_id,
             value=(match.first_coff if bid.first_select else match.second_coff)*bid.bid,
