@@ -98,6 +98,12 @@ async def set_win(
         first_win=first_team
     )
     match = await matches_db_helper.get_match(match_id)
+    coff = match.first_coff if first_team else match.second_coff
+    points = {bid.user_id: bid.bid*coff for bid in bids if bid.first_select == first_team}
+    user_db_helper.add_points_bulk(
+        ids_values=points,
+        by='bid_result'
+    )
     for bid in bids:
         await BotMethods.bot_client.send_message(
             bid.user_id,

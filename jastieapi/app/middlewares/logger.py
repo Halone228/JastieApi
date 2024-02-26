@@ -9,6 +9,7 @@ class LoggerMiddleware:
         self,
         level_name: str,
         level_icon: str,
+        exclude_endpoints: bool,
         **extra
     ):
         self.level = logger.level(
@@ -17,6 +18,7 @@ class LoggerMiddleware:
             no=18
         )
         self.logger = logger.bind(**extra)
+        self.exclude = exclude_endpoints
 
     async def __call__(self, request: Request, call_next):
         start_time = perf_counter()
@@ -32,3 +34,4 @@ class LoggerMiddleware:
                 response_code=response.status_code,
                 method=request.method
             )
+        return response
