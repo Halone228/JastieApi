@@ -1,0 +1,10 @@
+version: "3"
+services:
+  jastie-api:
+    build: .
+    env_file: ".env.test"
+    volumes:
+      - .:/app/
+  jastie-database:
+    image: postgres:latest
+    env_file: ".env.test"
