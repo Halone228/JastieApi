@@ -1,16 +1,17 @@
+from typing import Coroutine
+
 from jastiedatabase.sql import UserDBHelper
-from typing import NoReturn
 from fastapi import HTTPException
 from asyncio import Task, Future, create_task
-from types import CoroutineType
 from inspect import iscoroutine
+from typing import Coroutine
 
 
 class RunnerSaver:
     tasks = set()
 
     @classmethod
-    def create_task(cls, task: Task | Future | CoroutineType):
+    def create_task(cls, task: Task | Future | Coroutine):
         if iscoroutine(task):
             task = create_task(task)
         cls.tasks.add(task)

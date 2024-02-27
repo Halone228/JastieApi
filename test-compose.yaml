@@ -1,10 +1,23 @@
 version: "3"
+networks:
+  jastie:
+
 services:
-  jastie-api:
-    build: .
-    env_file: ".env.test"
-    volumes:
-      - .:/app/
-  jastie-database:
-    image: postgres:latest
-    env_file: ".env.test"
+  api:
+    extends:
+      file: "dev-compose.yaml"
+      service: jastie-api
+    entrypoint: "poetry run test"
+    env_file: "test.env"
+
+  postgres:
+    extends:
+      file: "dev-compose.yaml"
+      service: jastie-postgres
+    env_file: "test.env"
+
+
+  redis:
+    extends:
+      file: "dev-compose.yaml"
+      service: jastie-redis

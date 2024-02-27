@@ -1,6 +1,9 @@
+from asyncio import gather
+
 from pydantic import BaseModel, AwareDatetime, Field
 from jastieapi.app.include import *
 from jastiedatabase.datamodels import Match, Bid
+from .methods import send_messages
 
 
 class MatchCreate(BaseModel):
@@ -69,12 +72,12 @@ async def create_bid(
     user_id: int,
     matches_db_helper: matches_db_typevar
 ):
-    await matches_db_helper.set_bid_for_match(
+    RunnerSaver.create_task(matches_db_helper.set_bid_for_match(
         match_id=bid.match_id,
         user_id=user_id,
         first_select=bid.first_select,
         bid=bid.bid
-    )
+    ))
 
 
 @matches_router.post('/match/create')
@@ -82,7 +85,7 @@ async def create_match(
     match: MatchCreate,
     matches_db_helper: Annotated[MatchesDBHelper, Depends(get_helper(MatchesDBHelper))]
 ):
-    await matches_db_helper.create_match(match)
+    RunnerSaver.create_task(matches_db_helper.create_match(match))
 
 
 @matches_router.get('/match/{match_id}/win/{first_team}')
@@ -92,32 +95,31 @@ async def set_win(
     matches_db_helper: matches_db_typevar,
     user_db_helper: users_db_typevar
 ):
+    tasks = []
     bids = await matches_db_helper.get_match_bids(match_id)
-    await matches_db_helper.set_match_win(
+    tasks.append(matches_db_helper.set_match_win(
         match_id=match_id,
         first_win=first_team
-    )
+    ))
     match = await matches_db_helper.get_match(match_id)
     coff = match.first_coff if first_team else match.second_coff
     points = {bid.user_id: bid.bid*coff for bid in bids if bid.first_select == first_team}
-    user_db_helper.add_points_bulk(
+    tasks.append(user_db_helper.add_points_bulk(
         ids_values=points,
         by='bid_result'
+    ))
+    users_message: dict = {
+        bid.user_id:
+        f'Матч {match.match_name}.\n'
+        f'Победа за {match.first_opponent if first_team else match.second_opponent}\n'
+        f'Ваша ставка ({bid.bid:.2f}) была на {match.first_opponent if bid.first_select else match.second_opponent}'
+        for bid in bids
+    }
+    tasks.append(
+        send_messages(users_message)
     )
-    for bid in bids:
-        await BotMethods.bot_client.send_message(
-            bid.user_id,
-            f'Матч {match.match_name}.\n'
-            f'Победа за {match.first_opponent if first_team else match.second_opponent}\n'
-            f'Ваша ставка ({bid.bid:.2f}) была на {match.first_opponent if bid.first_select else match.second_opponent}'
-        )
-        if first_team != bid.first_select:
-            continue
-        await user_db_helper.add_points(
-            user_id=bid.user_id,
-            value=(match.first_coff if bid.first_select else match.second_coff)*bid.bid,
-            by='bid'
-        )
+    RunnerSaver.create_task(gather(*tasks))
+
 
 
 

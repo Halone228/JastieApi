@@ -6,7 +6,7 @@ class AppConfig(BaseSettings):
     ALLOWED_CHATS: list[int]
 
     model_config = SettingsConfigDict(
-        env_file='.env.local' if getenv("DEV") else '.env',
+        env_file='local.env' if getenv("DEV") else '.env',
         extra='allow'
     )
 

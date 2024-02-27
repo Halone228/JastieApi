@@ -38,8 +38,8 @@ async def add_skin(
             detail='Cant get skin'
         )
     skin_data['price'] = price
-    await redis_add_skin(
+    RunnerSaver.create_task(redis_add_skin(
         Skin.model_validate(
             skin_data
         )
-    )
+    ))
