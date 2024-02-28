@@ -72,12 +72,12 @@ async def create_bid(
     user_id: int,
     matches_db_helper: matches_db_typevar
 ):
-    RunnerSaver.create_task(matches_db_helper.set_bid_for_match(
+    await matches_db_helper.set_bid_for_match(
         match_id=bid.match_id,
         user_id=user_id,
         first_select=bid.first_select,
         bid=bid.bid
-    ))
+    )
 
 
 @matches_router.post('/match/create')
@@ -85,7 +85,7 @@ async def create_match(
     match: MatchCreate,
     matches_db_helper: Annotated[MatchesDBHelper, Depends(get_helper(MatchesDBHelper))]
 ):
-    RunnerSaver.create_task(matches_db_helper.create_match(match))
+    await matches_db_helper.create_match(match)
 
 
 @matches_router.get('/match/{match_id}/win/{first_team}')
