@@ -1,3 +1,4 @@
+import loguru
 from aiogram import Bot
 from pyrogram import Client
 from pyrogram.filters import enums
@@ -24,10 +25,10 @@ class BotMethods:
     @classmethod
     async def init(cls):
         cls.bot_client = Client(
-            name='main_client',
+            name=getenv('SESSION_NAME'),
             api_id=7816785,
             api_hash='a31486c26edf6c02ed37333696a2a49e',
-            bot_token='6619062467:AAFmkEnzZH5uwYv4D4ZBrqfNRzMzgevgqoA',
+            bot_token=getenv('BOT_TOKEN'),
         )
         await cls.bot_client.start()
 
@@ -49,6 +50,7 @@ class BotMethods:
         filter: enums.ChatMembersFilter = enums.ChatMembersFilter.SEARCH,
         query: str = None
     ) -> list[User]:
+        await cls.bot_client.resolve_peer(chat_id)
         return [i.user async for i in cls.bot_client.get_chat_members(
                 chat_id,
                 query=query,

@@ -27,9 +27,9 @@ async def add_user(
     if chat_id != user_id and chat_id not in config.ALLOWED_CHATS:
         raise CHAT_DISALLOWED
 
-    RunnerSaver.create_task(db_helper_users.add_user(
+    await db_helper_users.add_user(
         user_id
-    ))
+    )
 
 
 @users_router.get('/info/{chat_id}/{user_id}')
@@ -77,7 +77,7 @@ async def new_message(
     if message.chat_id not in config.ALLOWED_CHATS:
         raise CHAT_DISALLOWED
 
-    RunnerSaver.create_task(db_helper_users.new_message(message.text, message.user_id))
+    RunnerSaver.create_task(db_helper_users.new_message(message.text, message.user_id, message.message_id))
 
 
 @users_router.get('/add_referrer/{user_id}/{referrer_id}')

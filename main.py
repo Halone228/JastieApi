@@ -20,4 +20,5 @@ def start_prod():
 
 def start_test():
     from pytest import main
-    main('tests')
+    main(['tests', "-v", "-s", "-W", "ignore::pytest.PytestAssertRewriteWarning"])
+

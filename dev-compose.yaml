@@ -2,14 +2,14 @@ version: "3"
 networks:
   jastie:
 services:
-  jastie-api:
+  api:
     build: .
     env_file: "local.env"
     volumes:
       - .:/app/
     depends_on:
-      - jastie-postgres
-      - jastie-redis
+      - postgres
+      - redis
     networks:
       - jastie
     entrypoint: "poetry run dev"
@@ -17,7 +17,7 @@ services:
     ports:
       - "8000:8000"
 
-  jastie-postgres:
+  postgres:
     image: postgres:latest
     shm_size: "256m"
     env_file: "local.env"
@@ -26,7 +26,7 @@ services:
     ports:
       - "5432:5432"
 
-  jastie-redis:
+  redis:
     image: redis:latest
     shm_size: "256m"
     networks:

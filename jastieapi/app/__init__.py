@@ -36,6 +36,7 @@ async def lifespan(app: FastAPI):
                 await increment_count(session)
     task = asyncio.create_task(increment_loop())
     await __
+    await _
     yield
     del task
 

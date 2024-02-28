@@ -85,7 +85,7 @@ async def create_match(
     match: MatchCreate,
     matches_db_helper: Annotated[MatchesDBHelper, Depends(get_helper(MatchesDBHelper))]
 ):
-    RunnerSaver.create_task(matches_db_helper.create_match(match))
+    await matches_db_helper.create_match(match)
 
 
 @matches_router.get('/match/{match_id}/win/{first_team}')
