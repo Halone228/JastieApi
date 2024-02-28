@@ -118,7 +118,7 @@ async def set_win(
     tasks.append(
         send_messages(users_message)
     )
-    RunnerSaver.create_task(gather(*tasks))
+    await gather(*tasks)
 
 
 
