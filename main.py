@@ -1,12 +1,9 @@
 from jastieapi.app import *
+from subprocess import run
 
 
 def start_dev():
-    import uvicorn
-    uvicorn.run(
-        app,
-        host='0.0.0.0'
-    )
+    run(["uvicorn", 'main:app', '--reload', '--host', '0.0.0.0'])
 
 
 def start_prod():

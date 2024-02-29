@@ -1,5 +1,6 @@
-import aiogram.types
 from pydantic import BaseModel
+
+from jastiedatabase.datamodels import Vendor
 
 
 class VendorRequest(BaseModel):
@@ -9,3 +10,8 @@ class VendorRequest(BaseModel):
     user_id: int
     username: str
     full_name: str
+
+
+class VendorsData(BaseModel):
+    result: list[Vendor]
+    page: int

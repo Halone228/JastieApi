@@ -1,7 +1,7 @@
 from jastieapi.app.include import *
+from jastiedatabase.datamodels import Skin
 from jastiedatabase.redis.methods import url_exists, add_skin as redis_add_skin
 from .client import get_skin_from_url
-from jastiedatabase.datamodels import Skin
 
 skins_routes = APIRouter(
     prefix='/skins',
@@ -38,8 +38,8 @@ async def add_skin(
             detail='Cant get skin'
         )
     skin_data['price'] = price
-    RunnerSaver.create_task(redis_add_skin(
+    await redis_add_skin(
         Skin.model_validate(
             skin_data
         )
-    ))
+    )

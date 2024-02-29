@@ -1,5 +1,5 @@
 from jastieapi.app.include import *
-from .datamodels import VendorRequest
+from .datamodels import VendorRequest, VendorsData
 from .callbacks import vendors
 
 
@@ -22,3 +22,18 @@ async def process_vendor(data: VendorRequest, session: Annotated[AsyncSession, D
     )
     data = await new_vendor.execute()
     return {'data': list(data)}
+
+
+@vendors_route.get('/all')
+async def get_all(
+    vendor_db_helper: vendors_db_typevar,
+    limit: int = 40,
+    page: int = 0
+):
+    data = await vendor_db_helper.get_all_vendors(limit, page)
+    return VendorsData.model_validate(
+        {
+            'page': page,
+            'result': data
+        }, from_attributes=True, strict=False
+    )
