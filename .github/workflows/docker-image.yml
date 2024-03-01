@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ github.PAT_KEY }}
+          token: ${{ secrets.PAT_KEY }}
           submodules: recursive
         secrets:
           PAT_KEY:
