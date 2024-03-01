@@ -17,7 +17,9 @@ jobs:
         with:
           token: ${{ github.PAT_KEY }}
           submodules: recursive
-
+        secrets:
+          PAT_KEY:
+            required: true
       - name: Tests
         uses: cloudposse/github-action-docker-compose-test-run@main
         with:
