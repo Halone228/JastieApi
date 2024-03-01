@@ -16,6 +16,8 @@ services:
     restart: "on-failure"
     ports:
       - "8000:8000"
+    environment:
+      - DEBUG=1
 
   postgres:
     image: postgres:latest
@@ -25,6 +27,7 @@ services:
       - jastie
     ports:
       - "5432:5432"
+
 
   redis:
     image: redis:latest

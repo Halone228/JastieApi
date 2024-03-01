@@ -1,3 +1,5 @@
+import os
+
 import loguru
 from aiogram import Bot
 from pyrogram import Client
@@ -12,6 +14,7 @@ from aiogram.types import (
     ChatMemberBanned
 )
 from typing import Union
+from aiocache import cached
 
 from pyrogram.types import ChatMember, User
 
@@ -21,6 +24,13 @@ from .data_models import *
 class BotMethods:
     bot = Bot(getenv("BOT_TOKEN"))
     bot_client: Client
+
+    @classmethod
+    async def get_jastie_username(cls):
+        return (await cls.get_user(
+            int(os.getenv('CHAT_ID')),
+            454999432
+        )).user.username
 
     @classmethod
     async def init(cls):
@@ -52,11 +62,11 @@ class BotMethods:
     ) -> list[User]:
         await cls.bot_client.resolve_peer(chat_id)
         return [i.user async for i in cls.bot_client.get_chat_members(
-                chat_id,
-                query=query,
-                filter=filter
-            )
-        ]
+            chat_id,
+            query=query,
+            filter=filter
+        )
+                ]
 
 
 __all__ = [

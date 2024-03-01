@@ -8,8 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = "^0.109.0"
-aiogram = {extras = ["types"], version = "^3.3.0"}
-jastiedatabase = {path = "JastieDatabase", develop = true}
+aiogram = { extras = ["types"], version = "^3.3.0" }
+jastiedatabase = { path = "JastieDatabase", develop = true }
 pyrogram = "^2.0.106"
 pydantic-settings = "^2.1.0"
 uvicorn = "^0.27.0.post1"
@@ -19,6 +19,7 @@ alembic = "^1.13.1"
 psycopg2-binary = "^2.9.9"
 aiohttp = "^3.9.3"
 beautifulsoup4 = "^4.12.3"
+essential-generators = "^1.0"
 
 [tool.poetry.scripts]
 dev = "main:start_dev"
@@ -30,7 +31,7 @@ test = "main:start_test"
 freezegun = "^1.4.0"
 pytest = "^8.0.2"
 pytest-dependency = "^0.6.0"
-pytest-asyncio = "^0.23.5"
+pytest-asyncio = "^0.21"
 asgi-lifespan = "^2.1.0"
 
 [build-system]

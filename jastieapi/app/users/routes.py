@@ -86,23 +86,23 @@ async def new_message(
     if message.chat_id not in config.ALLOWED_CHATS:
         raise CHAT_DISALLOWED
 
-    RunnerSaver.create_task(db_helper_users.new_message(message.text, message.user_id, message.message_id))
+    await db_helper_users.new_message(message.text, message.user_id, message.message_id)
 
 
 @users_router.get('/add_referrer/{user_id}/{referrer_id}')
 async def add_referrer(
     user_id: int,
     referrer_id: int,
-    db_users_helper: users_db_typevar
+    referrer_db_helper: referrer_db_typevar
 ) -> ReferrerAnswer:
-    result = await db_users_helper.add_referrer(user_id, referrer_id)
+    if user_id == referrer_id:
+        return ReferrerAnswer(
+            code=UsersResultCodes.REFERRER_SELF
+        )
+    result = await referrer_db_helper.add_referrer(user_id, referrer_id)
     if result == -1:
         return ReferrerAnswer(
             code=UsersResultCodes.REFERRER_ALREADY_EXISTS
-        )
-    if result == 1:
-        return ReferrerAnswer(
-            code=UsersResultCodes.REFERRER_SELF
         )
     return ReferrerAnswer(
         code=UsersResultCodes.SUCCESS
@@ -112,10 +112,10 @@ async def add_referrer(
 @users_router.get('/referrers_count/{user_id}')
 async def get_referrers_count(
     user_id: int,
-    users_db_helper: users_db_typevar
+    referrer_db_helper: referrer_db_typevar
 ):
     return {
-        'data': await users_db_helper.get_referrals_count(user_id)
+        'data': await referrer_db_helper.get_referrals(user_id)
     }
 
 
