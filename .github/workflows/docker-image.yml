@@ -22,5 +22,5 @@ jobs:
         uses: cloudposse/github-action-docker-compose-test-run@main
         with:
           file: test-compose.yaml
-          service: app
+          service: api
           command: "poetry run test"
