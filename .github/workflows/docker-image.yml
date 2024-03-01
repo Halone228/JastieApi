@@ -20,4 +20,4 @@ jobs:
       - name: Build
         run: "docker compose -f test-compose.yaml build"
       - name: Tests
-        run: "docker compose -f test-compose.yaml up --exit-code-from api"
+        run: "docker compose -f test-compose.yaml up --exit-code-from api --attach api"
