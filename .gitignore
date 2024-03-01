@@ -1,5 +1,4 @@
 poetry.lock
 local.env
 .env
-test.env
 **.session**
