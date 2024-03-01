@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ssh-key: ${{ secrets.SSH_KEY }}
+          token: ${{ secrets.PAT_KEY }}
           submodules: true
 
       - name: Tests
