@@ -19,7 +19,4 @@ jobs:
           submodules: true
 
       - name: Tests
-        uses: isbang/compose-action@v1.5.1
-        with:
-          compose-file: "test-compose.yaml"
-          up-flags: "--attach api --exit-code-from api"
+        run: "docker compose -f test-compose.yaml --exit-code-from api"
