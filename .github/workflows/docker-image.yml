@@ -13,8 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Checkout submodules
-        uses: textbook/git-checkout-submodule-action@master
-
+        run: git submodule update --init --recursive
       - name: Tests
         uses: cloudposse/github-action-docker-compose-test-run@main
         with:
