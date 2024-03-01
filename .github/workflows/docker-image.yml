@@ -12,8 +12,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        permissions: read-all
         with:
+          permissions: read-all
           submodules: recursive
 
       - name: Tests
