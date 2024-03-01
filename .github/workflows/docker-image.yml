@@ -19,8 +19,7 @@ jobs:
           submodules: true
 
       - name: Tests
-        uses: cloudposse/github-action-docker-compose-test-run@main
+        uses: isbang/compose-action@v1.5.1
         with:
-          file: test-compose.yaml
-          service: api
-          command: "poetry run test"
+          compose-file: "test-compose.yaml"
+          up-flags: "--exit-code-from api"
