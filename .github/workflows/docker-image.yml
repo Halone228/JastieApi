@@ -17,6 +17,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_KEY }}
           submodules: true
-
+      - name: Build
+        run: "docker compose -f test-compose.yaml build"
       - name: Tests
         run: "docker compose -f test-compose.yaml up --exit-code-from api"
