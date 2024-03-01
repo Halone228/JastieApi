@@ -1,23 +1,37 @@
 version: "3"
 networks:
-  jastie:
+  test:
 
 services:
   api:
-    extends:
-      file: "dev-compose.yaml"
-      service: jastie-api
+    build: .
+    volumes:
+      - .:/app/
     entrypoint: "poetry run test"
     env_file: "test.env"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - test
+    environment:
+      - TEST=1
+
 
   postgres:
-    extends:
-      file: "dev-compose.yaml"
-      service: jastie-postgres
+    image: postgres:latest
+    shm_size: "256m"
     env_file: "test.env"
-
+    ports:
+      - "5432:5432"
+    networks:
+      - test
 
   redis:
-    extends:
-      file: "dev-compose.yaml"
-      service: jastie-redis
+    image: redis:latest
+    shm_size: "256m"
+    networks:
+      - test
+    ports:
+      - "6379:6379"
+

@@ -1,4 +1,6 @@
-from pydantic import BaseModel
+import os
+
+from pydantic import BaseModel, Field
 from .codes import UsersResultCodes
 
 
@@ -10,7 +12,8 @@ class Points(BaseModel):
 class MessageValue(BaseModel):
     text: str
     user_id: int
-    chat_id: int
+    chat_id: int = Field(default=os.getenv('CHAT_ID'))
+    message_id: int
 
 
 class ReferrerAnswer(BaseModel):

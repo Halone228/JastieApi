@@ -5,19 +5,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from jastieapi.app.include import *
 from loguru import logger
 
-
 _async_function = Optional[Callable[[], Coroutine[Any, Any, None]]]
 
 
 class BaseVendor(ABC):
     def __init__(
-            self,
-            action: str,
-            data: str,
-            user_id: int,
-            username: str,
-            full_name: str,
-            session: AsyncSession
+        self,
+        action: str,
+        data: str,
+        user_id: int,
+        username: str,
+        full_name: str,
+        session: AsyncSession
     ):
         self.action = action
         self.data = self._parse_data(data)
@@ -99,13 +98,13 @@ class SkinVendor(BuyVendor):
         self.skin = skin
         if skin is None:
             return "Такого скина нет.", False
-        can = await self.buy(skin.price*SKIN_MULTIPLIER)
+        can = await self.buy(skin.price * SKIN_MULTIPLIER)
         if can:
             async def callback():
-                await self.user_helper.add_points(self.user_id, -skin.price*SKIN_MULTIPLIER)
+                await self.user_helper.add_points(self.user_id, -skin.price * SKIN_MULTIPLIER)
 
             return ((f"Скин {skin.item_name} куплен.\nСпасибо за покупку 🤑\n"
-                    f"Переходите к @jastie777\nИ забирай свою покупку 🔥"), can,
+                     f"Переходите к @jastieboss\nИ забирай свою покупку 🔥"), can,
                     callback, {'item_name': skin.item_name})
         else:
             return "Недостаточно баллов.", can

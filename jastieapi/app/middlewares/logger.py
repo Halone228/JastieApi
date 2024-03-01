@@ -1,7 +1,9 @@
-from .core import *
-from loguru import logger
 from time import perf_counter
-from gzip import compress
+
+from loguru import logger
+from starlette.responses import StreamingResponse
+from starlette.concurrency import iterate_in_threadpool
+from .core import *
 
 
 class LoggerMiddleware:
@@ -9,9 +11,11 @@ class LoggerMiddleware:
         self,
         level_name: str,
         level_icon: str,
-        exclude_endpoints: bool,
+        exclude_endpoints=None,
         **extra
     ):
+        if exclude_endpoints is None:
+            exclude_endpoints = list()
         self.level = logger.level(
             level_name,
             icon=level_icon,
@@ -21,16 +25,26 @@ class LoggerMiddleware:
         self.exclude = exclude_endpoints
 
     async def __call__(self, request: Request, call_next):
+        if self.exclude is not None:
+            for route in self.exclude:
+                if route in request.url.path:
+                    return await call_next(request)
+
+        request_body = await request.body()
         start_time = perf_counter()
-        response: Response = await call_next(request)
+        response: StreamingResponse = await call_next(request)
         end_time = perf_counter()
+        _raw_body = [chunk async for chunk in response.body_iterator]
+        response_body = b''.join(_raw_body)
+        response.body_iterator = iterate_in_threadpool(iter(_raw_body))
+
         async with context_session() as session:
             logger_helper = LogsDBHelper(session)
             await logger_helper.request_log(
-                endpoint=request.url.query,
-                time_elapsed=end_time-start_time,
-                request_body=await request.body(),
-                response_body=response.body,
+                endpoint=request.url.path + (f'?{request.url.query}' if request.url.query else ''),
+                time_elapsed=end_time - start_time,
+                request_body=request_body,
+                response_body=response_body,
                 response_code=response.status_code,
                 method=request.method
             )
