@@ -15,11 +15,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT_KEY }}
-          submodules: recursive
-        secrets:
-          PAT_KEY:
-            required: true
+          ssh-key: ${{ secrets.SSH_KEY }}
+          submodules: true
+
       - name: Tests
         uses: cloudposse/github-action-docker-compose-test-run@main
         with:
