@@ -1,6 +1,5 @@
 import os
 
-import loguru
 from aiogram import Bot
 from pyrogram import Client
 from pyrogram.filters import enums
@@ -14,10 +13,7 @@ from aiogram.types import (
     ChatMemberBanned
 )
 from typing import Union
-from aiocache import cached
-
 from pyrogram.types import ChatMember, User
-
 from .data_models import *
 
 
@@ -67,6 +63,19 @@ class BotMethods:
             filter=filter
         )
                 ]
+
+    @classmethod
+    async def forward_message(
+        cls,
+        chat_id: int,
+        message_id: int,
+        from_chat_id: int
+    ):
+        await cls.bot_client.forward_messages(
+            chat_id,
+            from_chat_id,
+            message_id
+        )
 
 
 __all__ = [
