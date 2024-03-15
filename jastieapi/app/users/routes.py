@@ -137,3 +137,10 @@ async def add_user_points(
     users_db_helper: users_db_typevar
 ):
     await users_db_helper.add_points(user_id, data.points, by="api-admin")
+
+
+@users_router.get('/all')
+async def get_all_users(
+    users_db_helper: users_db_typevar
+) -> list[int]:
+    return await users_db_helper.get_all_users_ids()
