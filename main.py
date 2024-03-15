@@ -11,7 +11,7 @@ def start_prod():
     import uvicorn
     uvicorn.run(
         app,
-        host='0.0.0.0',
+        host='localhost',
         port=5000
     )
 
