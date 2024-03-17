@@ -1,5 +1,5 @@
 from time import perf_counter
-
+from fastapi import HTTPException
 from loguru import logger
 from starlette.responses import StreamingResponse
 from starlette.concurrency import iterate_in_threadpool
@@ -31,21 +31,39 @@ class LoggerMiddleware:
                     return await call_next(request)
 
         request_body = await request.body()
+        raised_exception = None
+        response = None  # noqa
         start_time = perf_counter()
-        response: StreamingResponse = await call_next(request)
+        try:
+            response: StreamingResponse = await call_next(request)
+        except Exception as e:
+            raised_exception = e
         end_time = perf_counter()
-        _raw_body = [chunk async for chunk in response.body_iterator]
-        response_body = b''.join(_raw_body)
-        response.body_iterator = iterate_in_threadpool(iter(_raw_body))
+        if raised_exception is None:
+            _raw_body = [chunk async for chunk in response.body_iterator]
+            response_body = b''.join(_raw_body)
+            response.body_iterator = iterate_in_threadpool(iter(_raw_body))
 
-        async with context_session() as session:
-            logger_helper = LogsDBHelper(session)
-            await logger_helper.request_log(
-                endpoint=request.url.path + (f'?{request.url.query}' if request.url.query else ''),
-                time_elapsed=end_time - start_time,
-                request_body=request_body,
-                response_body=response_body,
-                response_code=response.status_code,
-                method=request.method
-            )
-        return response
+            async with context_session() as session:
+                logger_helper = LogsDBHelper(session)
+                await logger_helper.request_log(
+                    endpoint=request.url.path + (f'?{request.url.query}' if request.url.query else ''),
+                    time_elapsed=end_time - start_time,
+                    request_body=request_body,
+                    response_body=response_body,
+                    response_code=response.status_code,
+                    method=request.method
+                )
+            return response
+        else:
+            async with context_session() as session:
+                logger_helper = LogsDBHelper(session)
+                code = await logger_helper.catch_error(
+                    raised_exception
+                )
+                return HTTPException(
+                    status_code=500,
+                    detail={
+                        'error_code': code
+                    }
+                )
