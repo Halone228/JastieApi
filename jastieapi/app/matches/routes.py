@@ -102,7 +102,10 @@ async def create_match(
             ) for i in await users_db_helper.get_all_users_ids()
         ]
     for i in need_send:
-        await i
+        try:
+            await i
+        except:
+            pass
 
 
 @matches_router.get('/match/{match_id}/win/{first_team}')
