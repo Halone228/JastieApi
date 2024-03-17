@@ -87,9 +87,7 @@ async def create_match(
     users_db_helper: users_db_typevar
 ):
     await matches_db_helper.create_match(match)
-    await gather(
-        *
-        [
+    need_send = [
             BotMethods.bot_client.send_message(
                 i,
                 f"Ставки на матч {match.first_opponent} vs {match.second_opponent}\n"
@@ -103,7 +101,8 @@ async def create_match(
                 "2. Покупать VIP"
             ) for i in await users_db_helper.get_all_users_ids()
         ]
-    )
+    for i in need_send:
+        await i
 
 
 @matches_router.get('/match/{match_id}/win/{first_team}')
