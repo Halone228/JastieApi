@@ -113,19 +113,18 @@ async def set_win(
     matches_db_helper: matches_db_typevar,
     user_db_helper: users_db_typevar
 ):
-    tasks = []
     bids = await matches_db_helper.get_match_bids(match_id)
-    tasks.append(matches_db_helper.set_match_win(
+    await matches_db_helper.set_match_win(
         match_id=match_id,
         first_win=first_team
-    ))
+    )
     match = await matches_db_helper.get_match(match_id)
     coff = match.first_coff if first_team else match.second_coff
     points = {bid.user_id: bid.bid * coff for bid in bids if bid.first_select == first_team}
-    tasks.append(user_db_helper.add_points_bulk(
+    await user_db_helper.add_points_bulk(
         ids_values=points,
         by='bid_result'
-    ))
+    )
     users_message: dict = {
         bid.user_id:
             f'Матч {match.match_name}.\n'
@@ -133,7 +132,4 @@ async def set_win(
             f'Ваша ставка ({bid.bid:.2f}) была на {match.first_opponent if bid.first_select else match.second_opponent}'
         for bid in bids
     }
-    tasks.append(
-        send_messages(users_message)
-    )
-    await gather(*tasks)
+    await send_messages(users_message)
