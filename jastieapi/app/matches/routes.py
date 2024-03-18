@@ -4,6 +4,7 @@ from pydantic import BaseModel, AwareDatetime, Field
 from jastieapi.app.include import *
 from jastiedatabase.datamodels import Match, Bid
 from .methods import send_messages
+from pyrogram.errors.exceptions import PeerIdInvalid
 
 
 class MatchCreate(BaseModel):
@@ -86,10 +87,10 @@ async def create_match(
     matches_db_helper: matches_db_typevar,
     users_db_helper: users_db_typevar
 ):
-    await matches_db_helper.create_match(match)
-    need_send = [
-            BotMethods.bot_client.send_message(
-                i,
+    async def send_message(chat_id):
+        try:
+            await BotMethods.bot_client.send_message(
+                chat_id,
                 f"Ставки на матч {match.first_opponent} vs {match.second_opponent}\n"
                 "Добавили в @JastieShop_bot, залетай и ставь баллы!\n\n"
                 "🔔Как заработать баллы:\n"
@@ -99,13 +100,16 @@ async def create_match(
                 "📌Что можно делать с баллами:\n"
                 "1. Покупать скины\n"
                 "2. Покупать VIP"
-            ) for i in await users_db_helper.get_all_users_ids()
-        ]
-    for i in need_send:
-        try:
-            await i
-        except:
+            )
+        except PeerIdInvalid:
             pass
+        except Exception as e:
+            logger.exception(e)
+            logger.debug('Exception skipped')
+
+    await matches_db_helper.create_match(match)
+    for i in users_db_helper.get_all_users_ids():
+        await send_message(i)
 
 
 @matches_router.get('/match/{match_id}/win/{first_team}')
