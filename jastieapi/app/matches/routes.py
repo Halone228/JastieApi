@@ -87,6 +87,7 @@ async def create_match(
     matches_db_helper: matches_db_typevar,
     users_db_helper: users_db_typevar
 ):
+    async def send_message(chat_id):
         try:
             await BotMethods.bot_client.send_message(
                 chat_id,
