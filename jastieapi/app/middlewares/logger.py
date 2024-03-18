@@ -1,5 +1,5 @@
 from time import perf_counter
-from fastapi import HTTPException
+from fastapi.responses import JSONResponse
 from loguru import logger
 from starlette.responses import StreamingResponse
 from starlette.concurrency import iterate_in_threadpool
@@ -61,9 +61,9 @@ class LoggerMiddleware:
                 code = await logger_helper.catch_error(
                     raised_exception
                 )
-                return HTTPException(
+                return JSONResponse(
                     status_code=500,
-                    detail={
+                    content={'detail': {
                         'error_code': code
-                    }
+                    }}
                 )
