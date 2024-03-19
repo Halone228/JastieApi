@@ -38,7 +38,7 @@ class BotMethods:
         async def wrapper(*args, **kwargs):
             try:
                 await func(*args, **kwargs)
-            except PeerIdInvalid:
+            except Exception:
                 pass
 
         return wrapper
