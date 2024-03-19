@@ -17,6 +17,7 @@ from .matches import *
 from .skins import *
 from .users import *
 from .vendors import *
+from .admin import *
 from aioschedule import every, run_pending
 
 

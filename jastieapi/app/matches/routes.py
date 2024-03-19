@@ -108,7 +108,7 @@ async def create_match(
             logger.debug('Exception skipped')
 
     await matches_db_helper.create_match(match)
-    for i in users_db_helper.get_all_users_ids():
+    for i in await users_db_helper.get_all_users_ids():
         await send_message(i)
 
 

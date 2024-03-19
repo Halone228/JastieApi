@@ -32,8 +32,14 @@ async def found_user(user_id: int, db_helper: UserDBHelper):
         raise user_not_found
 
 
+def chunks(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
+
 __all__ = [
     'found_user',
     'response_des',
-    'RunnerSaver'
+    'RunnerSaver',
+    'chunks'
 ]
