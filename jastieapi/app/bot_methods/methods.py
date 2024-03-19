@@ -1,4 +1,5 @@
 import os
+from io import BytesIO
 
 from aiogram import Bot
 from pyrogram import Client
@@ -62,6 +63,19 @@ class BotMethods:
             chat_id,
             text,
             parse_mode=ParseMode.HTML
+        )
+
+    @classmethod
+    async def send_image(
+        cls,
+        chat_id: int,
+        image: BytesIO,
+        caption: str
+    ):
+        await cls.bot_client.send_photo(
+            chat_id,
+            photo=image,
+            caption=caption
         )
 
     @classmethod
