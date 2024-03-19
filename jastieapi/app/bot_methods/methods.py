@@ -14,7 +14,10 @@ from aiogram.types import (
 )
 from typing import Union
 from pyrogram.types import ChatMember, User
+from pyrogram.enums import ParseMode
 from .data_models import *
+from functools import wraps
+from pyrogram.errors.exceptions import PeerIdInvalid
 
 
 class BotMethods:
@@ -28,6 +31,17 @@ class BotMethods:
             454999432
         )).user.username
 
+    @staticmethod
+    def no_peer_invalid(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            try:
+                await func(*args, **kwargs)
+            except PeerIdInvalid:
+                pass
+
+        return wrapper
+
     @classmethod
     async def init(cls):
         cls.bot_client = Client(
@@ -37,6 +51,18 @@ class BotMethods:
             bot_token=getenv('BOT_TOKEN'),
         )
         await cls.bot_client.start()
+
+    @classmethod
+    async def send_message(
+        cls,
+        chat_id: int,
+        text: str
+    ):
+        await cls.bot_client.send_message(
+            chat_id,
+            text,
+            parse_mode=ParseMode.HTML
+        )
 
     @classmethod
     async def get_user(cls, user_id: int, chat_id: int = int(getenv("CHAT_ID"))) -> Union[

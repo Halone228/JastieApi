@@ -12,7 +12,7 @@ class Points(BaseModel):
 class MessageValue(BaseModel):
     text: str
     user_id: int
-    chat_id: int = Field(default=os.getenv('CHAT_ID'))
+    chat_id: int = Field(default=int(os.getenv('CHAT_ID')))
     message_id: int
 
 
