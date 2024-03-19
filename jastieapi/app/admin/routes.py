@@ -1,5 +1,8 @@
+import uuid
 from asyncio import gather, sleep
+from io import BytesIO
 
+from fastapi import UploadFile, Form, File
 from jastieapi.app.include import *
 from .datamodels import *
 
@@ -19,6 +22,23 @@ async def send_message_text(
     for chunk in chunks(all_users, 50):
         await gather(
             *[send_message(id_, data.text) for id_ in chunk]
+        )
+        await sleep(.6)
+
+
+@admin_route.post('/send_all_image')
+async def send_message_image(
+    users_db_helper: users_db_typevar,
+    caption: Annotated[str, Form()],
+    file: Annotated[UploadFile, File()] = None,
+):
+    send_image = BotMethods.no_peer_invalid(BotMethods.send_image)
+    bytio = BytesIO(await file.read())
+    bytio.name = file.filename + '.jpg'
+    all_users = list(await users_db_helper.get_all_users_ids())
+    for chunk in chunks(all_users, 25):
+        await gather(
+            *[send_image(id_, image=bytio, caption=caption) for id_ in chunk]
         )
         await sleep(.6)
 
