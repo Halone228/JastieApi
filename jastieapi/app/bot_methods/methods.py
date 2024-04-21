@@ -19,6 +19,7 @@ from pyrogram.enums import ParseMode
 from .data_models import *
 from functools import wraps
 from pyrogram.errors.exceptions import PeerIdInvalid
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 class BotMethods:
@@ -76,6 +77,24 @@ class BotMethods:
             chat_id,
             photo=image,
             caption=caption
+        )
+
+    @classmethod
+    async def send_gift(
+        cls,
+        chat_id: int,
+        caption: str,
+        button_text: str,
+        image: BytesIO,
+        gift_id: str
+    ):
+        await cls.bot_client.send_photo(
+            chat_id,
+            photo=image,
+            caption=caption,
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton(text=button_text, callback_data=f'gift_{gift_id}')]]
+            )
         )
 
     @classmethod
