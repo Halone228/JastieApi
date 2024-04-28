@@ -101,7 +101,7 @@ class SkinVendor(BuyVendor):
         can = await self.buy(skin.price * SKIN_MULTIPLIER)
         if can:
             async def callback():
-                await self.user_helper.add_points(self.user_id, -skin.price * SKIN_MULTIPLIER)
+                await self.user_helper.add_points(self.user_id, -skin.price * SKIN_MULTIPLIER, by='vendor')
 
             return ((f"Скин {skin.item_name} куплен.\nСпасибо за покупку 🤑\n"
                      f"Переходите к @jastieboss\nИ забирай свою покупку 🔥"), can,
@@ -121,7 +121,7 @@ class DiscountVendor(BuyVendor):
         can = await self.buy(discount.price)
         if can:
             async def callback():
-                await self.user_helper.add_points(self.user_id, -discount.price)
+                await self.user_helper.add_points(self.user_id, -discount.price, by='vendor')
 
             return ((f"Спасибо за покупку 🤑\n"
                      f"Переходите к @jastie777\nИ забирай свою покупку 🔥"), can,
