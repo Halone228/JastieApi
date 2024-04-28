@@ -2,7 +2,7 @@ import uuid
 from asyncio import gather, sleep
 from io import BytesIO
 
-from fastapi import UploadFile, Form, File
+from fastapi import UploadFile, Form, File, Query
 from jastieapi.app.include import *
 from .datamodels import *
 from pydantic import BaseModel
@@ -14,6 +14,17 @@ admin_route = APIRouter(
     prefix='/admin',
     tags=['admin']
 )
+
+
+class BidsStatistics(BaseModel):
+    match_id: int
+    match_sum: float
+    match_count: int
+
+
+class Pagination(BaseModel):
+    page: Annotated[int, Query(ge=0)]
+    limit: Annotated[int, Query(gt=1)]
 
 
 @admin_route.post('/send_all_text')
