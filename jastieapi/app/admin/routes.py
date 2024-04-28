@@ -10,7 +10,6 @@ from jastiedatabase.datamodels import BidFull, Operation
 from jastiedatabase.redis import redis_client
 from uuid import uuid4
 
-
 admin_route = APIRouter(
     prefix='/admin',
     tags=['admin']
@@ -68,8 +67,10 @@ async def send_message_image_gift(
     async def send_messages():
         for chunk in chunks(all_users, 30):
             await gather(
-                *[send_image(id_, image=bytio, caption=caption, button_text=button_text, gift_id=gift_id) for id_ in chunk]
+                *[send_image(id_, image=bytio, caption=caption, button_text=button_text, gift_id=gift_id) for id_ in
+                  chunk]
             )
+
     RunnerSaver.create_task(send_messages())
 
 
