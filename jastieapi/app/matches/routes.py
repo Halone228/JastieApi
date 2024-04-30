@@ -1,5 +1,6 @@
 from asyncio import gather
 
+from fastapi import Query
 from pydantic import BaseModel, AwareDatetime, Field
 from jastieapi.app.include import *
 from jastiedatabase.datamodels import Match, Bid
@@ -79,6 +80,17 @@ async def create_bid(
         first_select=bid.first_select,
         bid=bid.bid
     )
+
+
+@matches_router.get(
+    '/bid/can_bid',
+)
+async def check_can_bid(
+    user_id: Annotated[int, Query()],
+    match_id: Annotated[int, Query()],
+    matches_db_helper: matches_db_typevar
+):
+    return list(await matches_db_helper.can_bet(match_id, user_id))
 
 
 @matches_router.post('/match/create')
