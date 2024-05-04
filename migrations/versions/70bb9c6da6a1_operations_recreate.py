@@ -32,9 +32,9 @@ def upgrade() -> None:
     op.create_table(
         'operations_table',
         sa.Column('id', sa.BigInteger(), autoincrement=True, primary_key=True),
-        sa.Column('action_id', sa.ForeignKey('action_table.id')),
-        sa.Column('initiator_id', sa.ForeignKey('initiator_table.id')),
-        sa.Column('user_id', sa.ForeignKey('users_table.id')),
+        sa.Column('action_id', sa.Integer(), sa.ForeignKey('action_table.id')),
+        sa.Column('initiator_id', sa.Integer(), sa.ForeignKey('initiator_table.id')),
+        sa.Column('user_id', sa.BigInteger(), sa.ForeignKey('users_table.id')),
         sa.Column('created_at', sa.DateTime(), server_default=sa.func.now()),
         sa.Column('points', sa.Float(), nullable=False),
         sa.Column('balance', sa.Float(), nullable=False)
