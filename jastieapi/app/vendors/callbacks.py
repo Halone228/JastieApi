@@ -83,7 +83,8 @@ class BuyVendor(BaseVendor):
             try:
                 await BotMethods.send_message(
                     -1002041612565,
-                    f'{self.username}:{info[3]}'
+                    f'username: {self.username}\nid: {self.user_id}\nfull_name: {self.full_name}\n'
+                    f'item:{info[3]}'
                 )
             except Exception as e:
                 logger.exception(e)
