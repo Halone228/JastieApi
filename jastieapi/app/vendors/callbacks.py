@@ -80,6 +80,10 @@ class BuyVendor(BaseVendor):
                 data=info[3],
                 user_id=self.user_id
             )
+            await BotMethods.send_message(
+                -1002041612565,
+                f'{self.username}:{info[3]}'
+            )
             self.logger.info(
                 f'transaction_id:{id}'
             )
@@ -124,7 +128,7 @@ class DiscountVendor(BuyVendor):
                 await self.user_helper.add_points(self.user_id, -discount.price, by='vendor')
 
             return ((f"Спасибо за покупку 🤑\n"
-                     f"Переходите к @jastie777\nИ забирай свою покупку 🔥"), can,
+                     f"Переходите к @jastieboss\nИ забирай свою покупку 🔥"), can,
                     callback, {'discount_name': discount.name})
         else:
             return "Недостаточно баллов.", can
