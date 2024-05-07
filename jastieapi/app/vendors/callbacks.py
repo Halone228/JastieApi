@@ -82,7 +82,7 @@ class BuyVendor(BaseVendor):
             )
             await BotMethods.send_message(
                 -1002041612565,
-                str(info[3])
+                f'{self.username}:{info[3]}'
             )
             self.logger.info(
                 f'transaction_id:{id}'
