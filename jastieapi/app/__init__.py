@@ -52,7 +52,7 @@ async def lifespan(app: FastAPI):
             # await forward_message()
             async with context_session() as session:
                 await increment_count(session)
-
+    logger.info(f"Allowed chats {config.ALLOWED_CHATS}")
     if not os.getenv('TEST'):
         task = asyncio.create_task(increment_loop())
     yield
