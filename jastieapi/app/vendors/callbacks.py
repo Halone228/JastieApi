@@ -80,10 +80,13 @@ class BuyVendor(BaseVendor):
                 data=info[3],
                 user_id=self.user_id
             )
-            await BotMethods.send_message(
-                -1002041612565,
-                f'{self.username}:{info[3]}'
-            )
+            try:
+                await BotMethods.send_message(
+                    -1002041612565,
+                    f'{self.username}:{info[3]}'
+                )
+            except Exception as e:
+                logger.exception(e)
             self.logger.info(
                 f'transaction_id:{id}'
             )
