@@ -144,3 +144,21 @@ async def get_all_users(
     users_db_helper: users_db_typevar
 ) -> list[int]:
     return await users_db_helper.get_all_users_ids()
+
+
+@users_router.get(
+    '/stats',
+)
+async def get_users_stats(
+    users_db_helper: users_db_typevar
+):
+    stats = list(await users_db_helper.get_stats_on_month())[0]
+    logger.debug(stats)
+    username_points = [
+        (name, chars/POINT_SYMBOLS) for name, chars in zip(
+            [(await BotMethods.get_user(user_id)).user.full_name for user_id, _ in stats],
+            (dat[1] for dat in stats)
+        )
+    ]
+
+    return sorted(username_points, key=lambda x: x[1], reverse=True)

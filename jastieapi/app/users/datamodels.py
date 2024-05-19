@@ -29,3 +29,8 @@ class User(BaseModel):
 
 class UsersList(BaseModel):
     result: list[User]
+
+
+class UsersStats(BaseModel):
+    # FullName : Points
+    data: dict[str, float]
