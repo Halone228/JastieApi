@@ -70,10 +70,13 @@ async def get_user_bids(
 
 @matches_router.post('/bid/create/{user_id}')
 async def create_bid(
-    bid: BidCreate,
+    bid: BidCreate | list,
     user_id: int,
     matches_db_helper: matches_db_typevar
 ):
+    can_bid = list(await matches_db_helper.can_bet(bid.match_id, user_id))
+    if not can_bid[0]:
+        return can_bid
     await matches_db_helper.set_bid_for_match(
         match_id=bid.match_id,
         user_id=user_id,

@@ -1,6 +1,6 @@
 from jastieapi.app.include import *
 from jastiedatabase.datamodels import Skin
-from jastiedatabase.redis.methods import url_exists, add_skin as redis_add_skin
+from jastiedatabase.redis.methods import url_exists, add_skin as redis_add_skin, delete_skin as redis_delete_skin
 from .client import get_skin_from_url
 
 skins_routes = APIRouter(
@@ -43,3 +43,13 @@ async def add_skin(
             skin_data
         )
     )
+
+
+@skins_routes.post(
+    '/delete/{skin_id}'
+)
+async def delete_skin(
+    skin_id: int
+):
+    url = await get_skin_by_id(skin_id)
+    await redis_delete_skin(url.url)
